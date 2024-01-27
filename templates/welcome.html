@@ -1,36 +1,83 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summary | GUDLFT Registration</title>
+    <!-- Intégration de Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+       
+    </style>
 </head>
 <body>
-        <h2>Welcome, {{club['email']}} </h2><a href="{{url_for('logout')}}">Logout</a>
+    <!-- Navbar Bootstrap -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">GUDLFT Registration</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">{{club['email']}} <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    {% with messages = get_flashed_messages()%}
+    <div class="container mt-4">
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome, {{club['email']}}</h1>
+            <p class="lead">Points available: {{ club['points'] }}</p>
+            <hr class="my-4">
+            {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul>
-       {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-       </ul>
-    {% endif%}
-    Points available: {{club['points']}}
-    <h3>Competitions:</h3>
-    <ul>
-        {% for comp in competitions%}
-        <li>
-            {{comp['name']}}<br />
-            Date: {{comp['date']}}</br>
-            Number of Places: {{comp['numberOfPlaces']}}
-            {%if comp['numberOfPlaces']|int >0%}
-            <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}">Book Places</a>
-            {%endif%}
-        </li>
-        <hr />
-        {% endfor %}
-    </ul>
-    {%endwith%}
+        {% for message in messages %}
+            {% if 'Great' in message %}
+                <div class="alert alert-success">
+            {% else %}
+                <div class="alert alert-danger">
+            {% endif %}
+            <ul>
+                <li>{{ message }}</li>
+            </ul>
+        </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
+            <h3 class="mb-3">Competitions:</h3>
+            <div class="row">
+                {% for comp in competitions %}
+                    <div class="col-md-6 mb-6">
+                        <div class="card">
+                            <!-- <img src="https://placekitten.com/300/200" class="card-img-top" alt="Competition Image"> -->
+                            <div class="card-body">
+                                <h5 class="card-title">{{ comp['name'] }}</h5>
+                                <p class="card-text">Date: {{ comp['date'] }}</p>
+                                <p class="card-text">Number of Places: {{ comp['numberOfPlaces'] }}</p>
+                                {% if comp['numberOfPlaces'] | int > 0 %}
+                                    <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}" class="btn btn-primary">Book Places</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Intégration de Bootstrap JS (si nécessaire) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>
