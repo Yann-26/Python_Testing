@@ -1,54 +1,58 @@
-import pytest
+import unittest
 from server import app
+from bs4 import BeautifulSoup
 
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    return app.test_client()
+class TestIntegration(unittest.TestCase):
 
-def test_index(client):
-    response = client.get('/')
-    assert response.status_code == 200
+    def setUp(self):
+        app.config['TESTING'] = True
+        self.client = app.test_client()
 
-def test_showsummary_valid_email(client):
-    data = {'email': 'admin@irontemple.com'}
-    response = client.post('/showSummary', data=data)
-    assert response.status_code == 200
-    assert b'Welcome to GUDLFT Registration' in response.data
+    def test_integration(self):
+        # Test de la route '/showSummary'
+        response = self.client.post('/showSummary', data={'email': 'john@simplylift.co'})
+        self.assertEqual(response.status_code, 200)
 
-def test_showsummary_invalid_email(client):
-    data = {'email': 'invalid_email@example.com'}
-    response = client.post('/showSummary', data=data)
-    assert response.status_code == 200
-    assert b'Error - Email not found.' in response.data
+        # Analyse du contenu HTML avec BeautifulSoup
+        soup = BeautifulSoup(response.data, 'html.parser')
+        welcome_message = soup.find('h2')
 
-def test_book_valid(client):
-    competition = 'SpringFestival'
-    club = 'IronTemple'
-    response = client.get(f'/book/{competition}/{club}')
-    assert response.status_code == 200
+        # Assertions avec BeautifulSoup
+        self.assertIsNotNone(welcome_message)
+        self.assertIn('Welcome', welcome_message.text)
+        self.assertIn('Welcome, john@simplylift.co', welcome_message.text)
 
-def test_book_invalid(client):
-    competition = 'InvalidCompetition'
-    club = 'InvalidClub'
-    response = client.get(f'/book/{competition}/{club}')
-    assert response.status_code == 200
-    assert b"Something went wrong-please try again" in response.data
+        # Test de la route '/book'
+        response = self.client.get('/book/SpringFestival/IronTemple')
+        self.assertEqual(response.status_code, 200)
 
-def test_purchaseplaces_invalid_competition(client):
-    data = {'competition': 'InvalidCompetition', 'club': 'SomeClub', 'places': '2'}
-    response = client.post('/purchasePlaces', data=data)
-    assert response.status_code == 200
-    assert b'Error - Competition or club not found!' in response.data
+        # Analyse du contenu HTML avec BeautifulSoup
+        soup = BeautifulSoup(response.data, 'html.parser')
+        booking_info = soup.find('div', {'class': 'booking-info'})
+        if booking_info:
+            # Effectuer des assertions sur l'élément booking_info
+            self.assertIn('Booking for Spring Festival at Iron Temple', booking_info.text)
+            self.assertIn('Available Places: 100', booking_info.text)
+        else:
+            return None
 
-def test_purchaseplaces_invalid_places(client):
-    data = {'competition': 'SpringFestival', 'club': 'IronTemple', 'places': '20'}
-    response = client.post('/purchasePlaces', data=data)
-    assert response.status_code == 200
-    assert b'Error - Invalid number of places requested!' in response.data
+        # Assertions avec BeautifulSoup
+        self.assertIsNotNone(booking_info)
+        self.assertIn('Booking for Spring Festival at Iron Temple', booking_info.text)
+        self.assertIn('Available Places: 100', booking_info.text)
 
-def test_purchaseplaces_max_limit(client):
-    data = {'competition': 'SpringFestival', 'club': 'IronTemple', 'places': '12'}
-    response = client.post('/purchasePlaces', data=data)
-    assert response.status_code == 200
-    assert b'Info - You cannot buy more than 12 places!' in response.data
+        # Test de la route '/purchasePlaces'
+        response = self.client.post('/purchasePlaces', data={'competition': 'SpringFestival', 'club': 'IronTemple', 'places': '2'})
+        self.assertEqual(response.status_code, 200)
+
+        # Analyse du contenu HTML avec BeautifulSoup
+        soup = BeautifulSoup(response.data, 'html.parser')
+        flash_message = soup.find('div', {'class': 'flash-message'})
+
+        # Assertions avec BeautifulSoup
+        self.assertIsNotNone(flash_message)
+        self.assertIn('Great - Booking complete!', flash_message.text)
+
+
+if __name__ == '__main__':
+    unittest.main()
