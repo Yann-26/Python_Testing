@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking for {{competition['name']}} || GUDLFT</title>
+    <title>Booking for {{competition['name']}} | GUDLFT</title>
     <!-- Ajouter le lien vers Bootstrap (assurez-vous de remplacer la version par la version que vous utilisez) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar Bootstrap -->
@@ -15,35 +32,38 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-           
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <h2>{{competition['name']}}</h2>
-        <p>Places available: {{competition['numberOfPlaces']}}</p>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-body">
+                <h2 class="card-title">{{competition['name']}}</h2>
+                <p class="card-text">Places available: {{competition['numberOfPlaces']}}</p>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="alert alert-danger">
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-        {% endwith %}
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
 
-        <form action="/purchasePlaces" method="post">
-            <input type="hidden" name="club" value="{{club['name']}}">
-            <input type="hidden" name="competition" value="{{competition['name']}}">
-            <div class="form-group">
-                <label for="places">How many places?</label>
-                <input type="number" class="form-control" name="places" id="places" required>
+                <form action="/purchasePlaces" method="post">
+                    <input type="hidden" name="club" value="{{club['name']}}">
+                    <input type="hidden" name="competition" value="{{competition['name']}}">
+                    <div class="form-group">
+                        <label for="places">How many places?</label>
+                        <input type="number" class="form-control" name="places" id="places" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Book</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary">Book</button>
-        </form>
+        </div>
     </div>
 
     <!-- Ajouter le script de Bootstrap (assurez-vous de remplacer la version par la version que vous utilisez) -->
