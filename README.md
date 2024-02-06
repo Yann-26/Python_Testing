@@ -1,5 +1,4 @@
-**Readme - GUDLFT Registration Server Integration Tests**
-
+#TEST D'INTEGRATION
 ---
 
 Ce projet utilise des tests d'intégration pour garantir le bon fonctionnement des fonctionnalités du serveur GUDLFT Registration. Ces tests sont implémentés à l'aide de l'outil de test unittest de Python et intègrent la bibliothèque BeautifulSoup pour faciliter l'analyse du contenu HTML renvoyé par le serveur.
@@ -9,7 +8,7 @@ Ce projet utilise des tests d'intégration pour garantir le bon fonctionnement d
 Pour exécuter les tests d'intégration, assurez-vous que l'environnement de test est configuré correctement. Utilisez la commande suivante :
 
 ```bash
-python -m unittest tests_integrations.TestIntegration
+    python -m unittest .\tests_integrations\TestIntegration.py
 ```
 
 ### Structure des tests
@@ -39,6 +38,19 @@ def book(competition, club):
         return render_template('booking.html', club=foundClub, competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
+        return render_template('welcome.html', club=club, competitions=competitions)
+```
+** modification**
+
+```python
+    @app.route('/book/<competition>/<club>')
+def book(competition, club):
+    foundClub = next((c for c in clubs if c['name'] == club), None)
+    foundCompetition = next((c for c in competitions if c['name'] == competition), None)
+    if foundClub and foundCompetition:
+        return render_template('booking.html', club=foundClub, competition=foundCompetition)
+    else:
+        flash("Something went wrong - please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
 ```
 
