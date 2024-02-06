@@ -1,32 +1,4 @@
-#TEST D'INTEGRATION
----
-
-Ce projet utilise des tests d'intégration pour garantir le bon fonctionnement des fonctionnalités du serveur GUDLFT Registration. Ces tests sont implémentés à l'aide de l'outil de test unittest de Python et intègrent la bibliothèque BeautifulSoup pour faciliter l'analyse du contenu HTML renvoyé par le serveur.
-
-### Configuration de l'environnement de test
-
-Pour exécuter les tests d'intégration, assurez-vous que l'environnement de test est configuré correctement. Utilisez la commande suivante :
-
-```bash
-    python -m unittest .\tests_integrations\TestIntegration.py
-```
-
-### Structure des tests
-
-1. **Test de la route '/showSummary' :**
-   - Vérifie que la page de résumé est accessible en utilisant un utilisateur existant.
-   - Analyse le contenu HTML pour s'assurer que le message de bienvenue et les informations utilisateur sont présents.
-
-2. **Test de la route '/book' :**
-   - Vérifie que la réservation pour un événement spécifique est accessible.
-   - Analyse le contenu HTML de la page de réservation pour s'assurer que les informations de réservation sont présentes, y compris le nouveau champ 'Available Places'.
-
-3. **Test de la route '/purchasePlaces' :**
-   - Vérifie que l'achat de places pour un événement est fonctionnel.
-   - Analyse le contenu HTML de la page après l'achat pour s'assurer que le message de confirmation est présent.
-
-### Modifications apportées à la route '/book'
-
+#Modifications apportées à la route '/book'
 La route '/book' a été modifiée pour gérer la récupération des informations du club et de la compétition avec la nouvelle structure de données (burg). La recherche des éléments a été ajustée en conséquence.
 
 ```python
@@ -40,11 +12,12 @@ def book(competition, club):
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
 ```
+
 ** modification**
 
-```python
+ ```python
     @app.route('/book/<competition>/<club>')
-def book(competition, club):
+    def book(competition, club):
     foundClub = next((c for c in clubs if c['name'] == club), None)
     foundCompetition = next((c for c in competitions if c['name'] == competition), None)
     if foundClub and foundCompetition:
@@ -54,3 +27,7 @@ def book(competition, club):
         return render_template('welcome.html', club=club, competitions=competitions)
 ```
 
+En utilisant la fonction **nex**t avec une valeur par défaut, vous pouvez obtenir le premier élément correspondant de la liste clubs ou competitions, ou *None* si aucun élément correspondant n'est trouvé. Cela permet d'éviter l'erreur **"IndexError: list index out of range"** en cas de liste vide, lors du test d'integration.
+
+#HTML 
+Amélioration de l'interface UI
