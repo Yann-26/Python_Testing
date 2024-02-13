@@ -1,0 +1,17 @@
+[
+    {
+        "nom": "Iron Temple",
+        "competition": "Fall Classic",
+        "nb_ticket": 12
+    },
+    {
+        "nom": "She Lifts",
+        "competition": "Fall Classic",
+        "nb_ticket": 12
+    },
+    {
+        "nom": "Simply Lift",
+        "competition": "Fall Classic",
+        "nb_ticket": 12
+    }
+]

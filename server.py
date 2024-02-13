@@ -22,11 +22,9 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
-
- 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', clubs = clubs, competitions = competitions)
 
 
 
@@ -84,13 +82,6 @@ def purchasePlaces():
 
 
 
-
-
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
-
-
-
-
-

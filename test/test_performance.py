@@ -17,12 +17,15 @@ class TestPerformance(HttpUser):
     @task
     def index(self):
         try:
-            competition = random.choice(self.competitions)
-            club = random.choice(self.clubs)
+            if self.competitions and self.clubs:
+                competition = random.choice(self.competitions)
+                club = random.choice(self.clubs)
 
-            self.client.post('/showSummary', data={'email': club['email']})
-            self.client.get(f'/book/{competition["name"]}/{club["name"]}')
-            self.client.post('/purchasePlaces', data={'competition': competition['name'], 'club': club['name'], 'places': '2'})
+                self.client.post('/showSummary', data={'email': club['email']})
+                self.client.get(f'/book/{competition["name"]}/{club["name"]}')
+                self.client.post('/purchasePlaces', data={'competition': competition['name'], 'club': club['name'], 'places': '2'})
+            else:
+                print("No competitions or clubs available.")
         except Exception as e:
             self.environment.events.request_failure.fire(
                 request_type="http",
@@ -30,3 +33,4 @@ class TestPerformance(HttpUser):
                 response_time=0,
                 exception=e
             )
+
