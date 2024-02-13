@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summary | GUDLFT Registration</title>
+    <title>Dashboard | GUDLFT Registration</title>
     <!-- Intégration de Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             padding-top: 70px;
         }
-
-       
+        .jumbotron {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        .card {
+            border-radius: 10px;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -39,25 +56,25 @@
             <p class="lead">Points available: {{ club['points'] }}</p>
             <hr class="my-4">
             {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            {% if 'Great' in message %}
-                <div class="alert alert-success">
-            {% else %}
-                <div class="alert alert-danger">
-            {% endif %}
-            <ul>
-                <li>{{ message }}</li>
-            </ul>
-        </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if 'Great' in message %}
+                            <div class="alert alert-success">
+                        {% else %}
+                            <div class="alert alert-danger">
+                        {% endif %}
+                        <ul>
+                            <li>{{ message }}</li>
+                        </ul>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
             <h3 class="mb-3">Competitions:</h3>
             <div class="row">
                 {% for comp in competitions %}
-                    <div class="col-md-6 mb-6">
+                    <div class="col-md-6 mb-4">
                         <div class="card">
                             <!-- <img src="https://placekitten.com/300/200" class="card-img-top" alt="Competition Image"> -->
                             <div class="card-body">

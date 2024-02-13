@@ -16,7 +16,6 @@
     </nav>
 
     <div class="container mt-5">
-        
         {% if error_message %}
             <div class="alert alert-danger" role="alert">
                 {{ error_message }}
@@ -37,6 +36,50 @@
                 </form>
             </div>
         </div>
+    </div>
+
+    <div class="container mt-5">
+        <h2>Information sur tous les clubs</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nom du club</th>
+                    <th>Email</th>
+                    <th>Points disponibles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for club in clubs %}
+                    <tr>
+                        <td>{{ club['name'] }}</td>
+                        <td>{{ club['email'] }}</td>
+                        <td>{{ club['points'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-5">
+        <h2>Information sur toutes les compétitions</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nom competition</th>
+                    <th>Date</th>
+                    <th>Place disponible</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comp in competitions %}
+                    <tr>
+                        <td>{{ competitions.name }}</td>
+                        <td>{{ competitions.date }}</td>
+                        <td>{{ competitions.numberOfPlaces }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Add Bootstrap JS and Popper.js scripts (optional) -->

@@ -1,5 +1,7 @@
+from datetime import datetime
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
+from ajout_ticket import ajouter_ticket
 
 
 #ici l'erreur était que, la fonction loadClubs ne prenait rien en argument et on lui demandait de charger le fichier
@@ -13,8 +15,11 @@ def loadClubs(filename='clubs.json'):
 #ici l'erreur était que, la fonction loadCompetitions ne prenait rien en argument et on lui demandait de charger le fichier
 def loadCompetitions(file='competitions.json'):
     with open(file) as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+        listOfCompetitions = json.load(comps)['competitions']
+        print("List of competitions:", listOfCompetitions)  
+        current_date = datetime.now()
+        upcoming_competitions = [competition for competition in listOfCompetitions if datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S") >= current_date]
+        return upcoming_competitions
 
 
 app = Flask(__name__)
@@ -27,15 +32,11 @@ clubs = loadClubs()
 # #######################################################################################################################################
 @app.route('/')
 def index():
-    return render_template('index.html')
+    competitions = loadCompetitions()
+    return render_template('index.html',  clubs=clubs, competitions=competitions)
 
 
 # #######################################################################################################################################
-# @app.route('/showSummary',methods=['POST'])
-# def showSummary():
-#     club = [club for club in clubs if club['email'] == request.form['email']][0]
-#     return render_template('welcome.html',club=club,competitions=competitions)
-
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
     email = request.form['email']
@@ -71,28 +72,24 @@ def purchasePlaces():
     competition = next((c for c in competitions if c['name'] == competition_name), None)
     club = next((c for c in clubs if c['name'] == club_name), None)
 
+    if places_required <= 0 :
+        flash('Error - Invalid number of places requested!')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    
     # Vérification si la compétition et le club existent
     if competition is None or club is None:
         flash('Error - Competition or club not found!')
         return render_template('welcome.html', club=club, competitions=competitions)
 
-    # Vérification du nombre de places disponibles
-    current_places = int(competition['numberOfPlaces'])
-    
-    if places_required <= 0 or places_required > current_places:
-        flash('Error - Invalid number of places requested!')
-        return render_template('welcome.html', club=club, competitions=competitions)
-    
-    if  places_required == 12 :
-        flash('Info - You cannot buy more than 12 places!')
-        return render_template('welcome.html', club=club, competitions=competitions)
-
-
-    # Mise à jour du nombre de places après l'achat
-    competition['numberOfPlaces'] = current_places - places_required
-
-    flash('Great - Booking complete!')
+    if ajouter_ticket(club['name'], competition['name'], places_required):
+            # Si l'ajout est réussi, mettez à jour les autres informations et redirigez
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+            flash('Great-booking complete!', "success")   
+    else:
+            # Si l'ajout a échoué (limite dépassée), affichez un message approprié
+            flash("Impossible d'ajouter les tickets, limite dépassée.", "error")
     return render_template('welcome.html', club=club, competitions=competitions)
+
 
 
 
