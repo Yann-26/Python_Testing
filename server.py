@@ -89,6 +89,16 @@ def purchasePlaces():
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
+@app.route('/some_other_route/<club_email>')
+def some_other_route(club_email):
+    matching_clubs = [club for club in clubs if club['email'] == club_email]
+    if not matching_clubs:
+        flash("L'e-mail fourni n'existe pas dans notre système.", 'error')
+        # Redirigez vers la page où l'erreur doit être affichée
+        return redirect(url_for('index'))
+    club = matching_clubs[0]
+    # Vous pouvez effectuer des opérations supplémentaires ici si nécessaire
+    return render_template('welcome.html', club=club, competitions=competitions)
 
 
 # #######################################################################################################################################

@@ -43,6 +43,7 @@
                 <input type="number" class="form-control" name="places" id="places" required>
             </div>
             <button type="submit" class="btn btn-primary">Book</button>
+            <a href="{{ url_for('some_other_route', club_email=club['email']) }}">retour</a>
         </form>
     </div>
 
