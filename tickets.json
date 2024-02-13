@@ -3,5 +3,10 @@
         "nom": "Simply Lift",
         "competition": "Fall Classic",
         "nb_ticket": 12
+    },
+    {
+        "nom": "Iron Temple",
+        "competition": "Fall Classic",
+        "nb_ticket": 4
     }
 ]
