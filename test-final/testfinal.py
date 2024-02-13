@@ -39,8 +39,8 @@ class TestloadCompetitions(unittest.TestCase):
         chargComp = loadCompetitions('competitions.json')
         self.assertEqual(chargComp, competitions)
 
-class TestPurchasePlaces(unittest.TestCase):
 
+class TestPurchasePlaces(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         self.app = app.test_client()
@@ -74,6 +74,30 @@ class TestShowSummary(unittest.TestCase):
         response = self.app.post('/showSummary', data=data)
         self.assertEqual(response.status_code, 200)
 
+
+class TestLogoutFunction(unittest.TestCase):
+    
+    def setUp(self):
+        app.testing = True
+        self.app = app.test_client()
+
+    def test_logout_redirect(self):
+        # Effectuer une requête GET vers la route /logout
+        response = self.app.get('/logout', follow_redirects=True)
+        
+        # Vérifier si la redirection vers la page d'accueil a eu lieu
+        self.assertEqual(response.status_code, 200)  # Code de statut 200 indique succès
+
+
+class TestIndexRoute(unittest.TestCase):
+    def setUp(self):
+        app.config['TESTING'] = True
+        self.app = app.test_client()
+
+    def test_index(self):
+        with app.test_request_context('/'):
+            response = self.app.get('/')
+            self.assertEqual(response.status_code, 200)  # Vérifie si la réponse renvoie le code 200 (succès)
 
 if __name__ == '__main__':
     unittest.main()

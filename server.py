@@ -15,8 +15,7 @@ def loadClubs(filename='clubs.json'):
 #ici l'erreur était que, la fonction loadCompetitions ne prenait rien en argument et on lui demandait de charger le fichier
 def loadCompetitions(file='competitions.json'):
     with open(file) as comps:
-        listOfCompetitions = json.load(comps)['competitions']
-        print("List of competitions:", listOfCompetitions)  
+        listOfCompetitions = json.load(comps)['competitions']  
         current_date = datetime.now()
         upcoming_competitions = [competition for competition in listOfCompetitions if datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S") >= current_date]
         return upcoming_competitions
@@ -27,7 +26,6 @@ app.secret_key = 'something_special'
 
 competitions = loadCompetitions()
 clubs = loadClubs()
-
 
 # #######################################################################################################################################
 @app.route('/')

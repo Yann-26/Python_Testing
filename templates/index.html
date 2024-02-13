@@ -73,9 +73,9 @@
             <tbody>
                 {% for comp in competitions %}
                     <tr>
-                        <td>{{ competitions.name }}</td>
-                        <td>{{ competitions.date }}</td>
-                        <td>{{ competitions.numberOfPlaces }}</td>
+                        <td>{{ comp['name'] }}</td>
+                        <td>{{ comp['date'] }}</td>
+                        <td>{{ comp['numberOfPlaces'] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
